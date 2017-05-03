@@ -46,17 +46,31 @@ size = int(len(X) * 0.66)
 ################### split into train and test #########################################
 train, test = X[0:size], X[size:len(X)]
 history = [x for x in train]
+history2 = [x for x in train]
 predictions = list()
+predictions2 = list()
+
 
 ####################### make rolling forecast by training the model everytime for each prediction ############################### 
 for t in range(len(test)):
 	model = ARIMA(history, order=(5,1,0))
+	model2 = ARIMA(history2, order=(5,1,0))
 	model_fit = model.fit(disp=0)
+	model_fit_2 = model2.fit(disp=0)
+
 	output = model_fit.forecast()
+	output2 = model_fit_2.forecast()
+
 	yhat = output[0]
+	yhat2 = output2[0]
+
 	predictions.append(yhat)
+	predictions2.append(yhat2)
+
 	obs = test[t]
 	history.append(obs)
+	history2.append(obs)
+
 	print('predicted=%f, expected=%f' % (yhat, obs))
 
 ###################### calculate MSE ###################################################
@@ -65,4 +79,5 @@ print('Test MSE: %.3f' % error)
 # plot
 pyplot.plot(test)
 pyplot.plot(predictions, color='red')
+pyplot.plot(predictions2, color='black')
 pyplot.show()
